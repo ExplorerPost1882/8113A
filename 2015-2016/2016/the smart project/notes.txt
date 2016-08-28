@@ -1,0 +1,49 @@
+notes
+	MAKE A MAP
+	LeftSonar
+	RightSonar
+	FrontSonar
+	BackSonar
+1st: make funktions
+	Boot
+		reset incoders
+		reset gyro
+		find Team Color and save
+		find tile and save
+		find Location and save	
+	FindLocationAndSave
+		X
+		Y
+	MoveToPosition(X,Y)
+		look a position
+		look at rotashion
+		rotate toords position
+		travle tords position at resanable speed
+		call findLocationAndSave
+	LocateBallsAndSave
+		deturmon robots frob balls
+		look at where balls shuld be based on map
+	MoveToBalls
+		find closets balls
+		drive to the closest balls
+	ShootBalls
+		spin up shooters
+		turn on intake when at norm RPM
+	CountBalllsAndSave
+		count how many balls in intake
+		call every loop
+		and save
+		if 4 balls call MoveToShootAndShoot
+	MoveToShootAndShoot
+		if 4 balls
+		colsont map for nerist shoot location
+		travle to location
+		for 4 times
+		call shoot
+2nd: make main proces
+	boot
+	loop start
+		LocateBallsAndSave
+		MoveToBalls
+		CountBalllsAndSave
+	loop end

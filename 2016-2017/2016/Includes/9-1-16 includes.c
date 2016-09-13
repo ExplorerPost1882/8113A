@@ -8,7 +8,7 @@ void stopmotors()
 	motor[backLeft]   = 0;
 	wait1Msec(10);
 }
-void moverobot(int xx1,int xx2,int yy1, int duration, int automode, int gospeed)
+void moverobot(int xx1, int xx2, int yy1, int duration, int automode, int gospeed)
 {
 	int direction;
 	int delta = 35;
@@ -146,7 +146,7 @@ void moverobot(int xx1,int xx2,int yy1, int duration, int automode, int gospeed)
 	}
 }
 //88888888888888888888888888888    spin  8888888888888888888888888888888888
-void spinbot(int xx2,int rotdir)
+void spinbot(int xx2, int rotdir)
 {
 	//Determine direction of rotation 1 is Right 0 is Left
 	if (rotdir == 1) xx2= -xx2;
@@ -163,7 +163,7 @@ void spinbot(int xx2,int rotdir)
 }
 //88888888888888888888888888888    ROBOT TURN MOVEMENT  8888888888888888888888888888888888
 //calls the turn motor routine once the desired angle is determined
-void turnrobot(int angle, int direction,int speed)
+void turnrobot(int angle, int direction, int speed)
 {
 	int gyropos = 0, desiredangle = 0;
 	//get current sensor position
@@ -188,7 +188,7 @@ void turnrobot(int angle, int direction,int speed)
 	//Call stop motors function after turning
 	stopmotors();
 }
-void smoverobot(int xx1,int xx2,int yy1, int duration, int automode)
+void smoverobot(int xx1, int xx2, int yy1, int duration, int automode)
 {
 	if (automode==0)
 	{
@@ -212,9 +212,16 @@ void smoverobot(int xx1,int xx2,int yy1, int duration, int automode)
 		stopmotors();
 	}
 }
+//88888888888888888888888888888    Pneumatics  8888888888888888888888888888888888
+void pneumatucs(int stateI)
+{
+	SensorValue[Pen1] = stateI;
+	SensorValue[Pen2] = stateI;
+}
+
 
 //88888888888888888888888888888    LCD READOUT  8888888888888888888888888888888888
-void lcd()
+task lcd()
 {
 	int xbat;
 	string num;
@@ -223,111 +230,49 @@ void lcd()
 	bLCDBacklight = true;                                    // Turn on LCD Backlight
 	string mainBattery;
 	string armbattery;
-	clearLCDLine(0);                                            // Clear line 1 (0) of the LCD
-	clearLCDLine(1);                                            // Clear line 2 (1) of the LCD
-	//Display the Primary Robot battery voltage
-	displayLCDString(0,0, "bat:");
-	displayLCDString(1,0, "armbat:");
-	sprintf(mainBattery, "%1.2f%c", nImmediateBatteryLevel/1000.0,'V'); //Build the value to be displayed
-	sprintf(armbattery, "%1.2f%c", SensorValue[bat]/297.0,'V');
-	displayLCDString(0,4, mainBattery);
-	displayLCDString(1,7, armbattery);
-	//Short delay for the LCD refresh rate
-	wait1Msec(100);
-	//}
-}
-//88888888888888888888888888888  flywheels  8888888888888888888888888888888888
-//88888888888888888888888888888  intake  8888888888888888888888888888888888
-void intake(int speed,int der,int on_off)
-{
-	//on
-	if(on_off == 0)
+	string pen1L;
+	string pen2L;
+	int mode = 1;
+	int time = 500;
+
+	while(1==1)
 	{
-		//forword
-		if(der == 0)
+		//888888888888888888888888888 START OF LCD CODE 888888888888888888888888888
+		if(nLCDButtons != 0)
 		{
-			motor[intakeMot] = speed;
+			mode = nLCDButtons;
+			clearLCDLine(0);// Clear line 1 (0) of the LCD
+			clearLCDLine(1);// Clear line 2 (1) of the LCD
 		}
-		//backwords
-		if(der == 1)
+
+		if(mode == 1)
 		{
-			motor[intakeMot] = -speed;
+			//Display the Primary Robot battery voltage
+			displayLCDString(0,0, "bat:");
+			displayLCDString(1,0, "armbat:");
+			sprintf(mainBattery, "%1.2f%c", nImmediateBatteryLevel/1000.0,'V'); //Build the value to be displayed
+			sprintf(armbattery, "%1.2f%c", SensorValue[bat]/297.0,'V');
+			displayLCDString(0,4, mainBattery);
+			displayLCDString(1,7, armbattery);
 		}
-	}
-	//off
-	if(on_off == 1)
-	{
-		motor[intakeMot] = 0;
-	}
-}
-//88888888888888888888888888888  shoot  8888888888888888888888888888888888
-void shoot(int speed,int on_off,int minRpm)
-{
-	//on
-	if(on_off == 0)
-	{
-		if(SmartMotorGetSpeed(RightShootT) > 85)
+		else if(mode == 2)
 		{
-			SetMotor(LeftShootT,speed);
-			SetMotor(LeftShootB,speed);
-			SetMotor(RightShootB,speed);
-			SetMotor(RightShootT,speed);
+			displayLCDString(0,0, "Pen1:");
+			displayLCDString(1,0, "Pen2:");
+			sprintf(pen1L, "%1.2f%c", stateI); //Build the value to be displayed
+			sprintf(pen2L, "%1.2f%c", stateI);
+			displayLCDString(0,6, pen1L);
+			displayLCDString(1,6, pen2L);
 		}
-		if(SmartMotorGetSpeed(RightShootT) < 85)
+		else if(mode == 4)
 		{
-			SetMotor(LeftShootT,speed+25);
-			SetMotor(LeftShootB,speed+25);
-			SetMotor(RightShootB,speed+25);
-			SetMotor(RightShootT,speed+25);
 		}
-	}
-	//off
-	if(on_off == 1)
-	{
-		SetMotor(LeftShootT,0);
-		SetMotor(LeftShootB,0);
-		SetMotor(RightShootB,0);
-		SetMotor(RightShootT,0);
-	}
-}
-//88888888888888888888888888888  smart intake  8888888888888888888888888888888888
-void smartIntake(int iSpeed,int sSpeed,int minRPM,int ShootOn_Off,int InOn_Off)
-{
-	shoot(sSpeed, ShootOn_Off, minRPM);
-	if(SmartMotorGetSpeed(RightShootT) > 85)
-	{
-		intake(iSpeed, 0, InOn_off);
-	}
-	if(SmartMotorGetSpeed(RightShootT) < 85)
-	{
-		intake(iSpeed, 0, 1);
+		wait1Msec(time);
 	}
 }
 
-//88888888888888888888888888888    LCD READOUT  8888888888888888888888888888888888
-void lcd()
-{
-	int xbat;
-	string num;
-	string number;
-	//bat num
-	bLCDBacklight = true;                                    // Turn on LCD Backlight
-	string mainBattery;
-	string armbattery;
-	clearLCDLine(0);                                            // Clear line 1 (0) of the LCD
-	clearLCDLine(1);                                            // Clear line 2 (1) of the LCD
-	//Display the Primary Robot battery voltage
-	displayLCDString(0,0, "bat:");
-	displayLCDString(1,0, "armbat:");
-	sprintf(mainBattery, "%1.2f%c", nImmediateBatteryLevel/1000.0,'V'); //Build the value to be displayed
-	sprintf(armbattery, "%1.2f%c", SensorValue[bat]/297.0,'V');
-	displayLCDString(0,4, mainBattery);
-	displayLCDString(1,7, armbattery);
-	//Short delay for the LCD refresh rate
-	wait1Msec(100);
-	//}
 
-}
+
 //88888888888888888888888888888  arm  8888888888888888888888888888888888
 /////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////

@@ -1,9 +1,10 @@
 #pragma config(UART_Usage, UART1, uartVEXLCD, baudRate19200, IOPins, None, None)
 #pragma config(I2C_Usage, I2C1, i2cSensors)
-#pragma config(Sensor, in1,    bat,            sensorNone)
+#pragma config(Sensor, in1,    bat,            sensorAnalog)
 #pragma config(Sensor, in8,    gyro,           sensorGyro)
 #pragma config(Sensor, dgtl1,  RedOrBlue,      sensorDigitalIn)
 #pragma config(Sensor, dgtl2,  LeftOrNot,      sensorDigitalIn)
+#pragma config(Sensor, dgtl3,  Skils,          sensorDigitalIn)
 #pragma config(Sensor, I2C_1,  intmotencFL,    sensorQuadEncoderOnI2CPort,    , AutoAssign )
 #pragma config(Sensor, I2C_2,  intmotencBL,    sensorQuadEncoderOnI2CPort,    , AutoAssign )
 #pragma config(Sensor, I2C_3,  intmotencBR,    sensorQuadEncoderOnI2CPort,    , AutoAssign )
@@ -26,13 +27,16 @@
 #pragma autonomousDuration(20)
 #pragma userControlDuration(120)
 
-#include "Vex_Competition_Includes.c"   //Main competition background code...do not modify!
-#include "9-15-16 includes.c"				 //main user code has all the voids...no need to modify.
-#include "base.c"				 //main user code has all the voids...no need to modify.
 //varables
 int up = 1000;
 int down = 0;
-int testSpeed= 0;
+//speeds
+const int highspd = 127;
+const int medspd = 95;
+const int lowspd = 40;
+
+#include "Vex_Competition_Includes.c"   //Main competition background code...do not modify!
+#include "9-17-16 includes.c"				 //main user code has all the voids...no need to modify.
 
 void pre_auton()
 {
@@ -56,27 +60,34 @@ task autonomous()
 {
 	//turnrobot(angle,direction,speed);
 	//moverobot(xx1,xx2,yy1,duration,automode,speed)
+	//movearm (speed,duration,holdarm,holdarmpos)
+	/*
+	if (SensorValue[RedOrBlue] == 0) //blue
+	{
+	if (SensorValue[SkyOrNot] == 0)//blue left
+	{
 
-	//if (SensorValue[RedOrBlue] == 0) //blue
-	//{
-	//	if (SensorValue[SkyOrNot] == 0)//not skyrise
-	//	{
-	//	}
-	//	if (SensorValue[SkyOrNot] == 1)//blue skyrise auton
-	//	{
+	}
+	if (SensorValue[SkyOrNot] == 1)//blue Right
+	{
 
-	//	}
-	//}
-	//if (SensorValue[RedOrBlue] == 1)//red
-	//{
-	//	if (SensorValue[SkyOrNot] == 0) //not skyrise
-	//	{
+	}
+	}
+	if (SensorValue[RedOrBlue] == 1)//red
+	{
+	if (SensorValue[SkyOrNot] == 0) //red right
+	{
 
-	//	}
-	//	if (SensorValue[SkyOrNot] == 1)//red skyrise auton
-	//	{
-	//	}
-	//}
+	}
+	if (SensorValue[SkyOrNot] == 1)//red left
+	{
+	}
+	}
+	*/
+	if(SensorValue[Skils] == 1)//skills feald
+	{
+		win();
+	}
 }
 
 task usercontrol()
@@ -98,8 +109,6 @@ task usercontrol()
 		Y2 = (abs(vexRT[Ch3Xmtr2]) > threshold+10) ? (vexRT[Ch3Xmtr2]*2/3) : (0);
 		//call robot movement function
 		moverobot(X1,X2,Y1*0.8,0,0,0);
-		moverobot(X1,X2,testSpeed,0,0,0);
-
 		//movearm(127,0,1,up);
 	}
 }

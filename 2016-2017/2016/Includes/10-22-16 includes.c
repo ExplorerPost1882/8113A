@@ -1,5 +1,5 @@
 #include "base.c"				 //main user code has all the voids...no need to modify.
-#include "arm.c"
+#include "arm-test.c"
 void win()
 {
 	moverobot(0,0,-700,0,1,medspd);

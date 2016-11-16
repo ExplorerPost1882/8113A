@@ -55,6 +55,7 @@ void pre_auton()
 	nMotorEncoder[backLeft]=0;
 	nMotorEncoder[backRight]=0;
 	nMotorEncoder[topRight]=0;
+	nMotorEncoder[pincer]=0;
 	//reset gyro
 	SensorType[gyro] = 0;
 	wait1Msec(50);
@@ -155,7 +156,6 @@ task usercontrol()
 			armHol = 1;
 			movearm(lowspd+15,0,1,pos);
 		}
-
 		//joy controel
 		if(armHol == 0)
 		{
@@ -169,6 +169,15 @@ task usercontrol()
 		if(vexRT[Btn5DXmtr2] == 1)
 		{
 			armHol = 0;
+		}
+		//pincer code********************************************
+		if(vexRT[Btn7UXmtr2])
+		{
+			pincers(1, 127);
+		}
+		if(vexRT[Btn7DXmtr2])
+		{
+			pincers(0, 127);
 		}
 	}
 }

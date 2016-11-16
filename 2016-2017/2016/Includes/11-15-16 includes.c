@@ -2,64 +2,43 @@
 #include "arm-test.c"
 
 //pinchers
-void pincers(string pos)
+void stopPincers()
 {
-	int oppenP = 1000;
-	if(pos == "oppen")
+	motor[pincer] = 0;
+}
+void pincers(int pos, int speed)
+{
+	int oppenP = 500;
+	int closeP = 0;
+	if(pos == 1)
 	{
-		while ((abs(nMotorEncoder[pincer]) < (abs(oppenP)-30)))
-			//  || ((nMotorEncoder[backLeft]>yy1+200)&&(-nMotorEncoder[backRight]>yy1+200)))
+		while ((abs(nMotorEncoder[pincer]) != (abs(oppenP)-30)) || (abs(nMotorEncoder[pincer]) != (abs(oppenP)+30)))
 		{
-			if (abs(nMotorEncoder[backLeft]) == abs(nMotorEncoder[backRight]))
+			if((abs(nMotorEncoder[pincer])) < (abs(oppenP)-30))
 			{
-				motor[frontRight] = gospeed*direction;
-				motor[backRight]  = gospeed*direction;
-				motor[frontLeft]  = gospeed*direction;
-				motor[backLeft]   = gospeed*direction;
-				wait1Msec(1);
+				motor[pincer] = speed;
 			}
-			//if moving forward and left leads, slow down left side
-			else if ((abs(nMotorEncoder[backLeft]) > abs(nMotorEncoder[backRight])) && (direction==1))
+			if((abs(nMotorEncoder[pincer])) > (abs(oppenP)+30))
 			{
-				motor[frontRight] = gospeed;
-				motor[backRight]  = gospeed;
-				motor[frontLeft]  = (gospeed-delta);
-				motor[backLeft]   = (gospeed-delta);
-				wait1Msec(1);
+				motor[pincer] = -speed;
 			}
-			//if moving backward and left leads, slow down left side
-			else if ((abs(nMotorEncoder[backLeft]) > abs(nMotorEncoder[backRight])) && (direction==-1))
-			{
-				motor[frontRight] = -gospeed;
-				motor[backRight]  = -gospeed;
-				motor[frontLeft]  = -(gospeed-delta);
-				motor[backLeft]   = -(gospeed-delta);
-				wait1Msec(1);
-			}
-			//if moving forward and left lags, slow down right side
-			else if ((abs(nMotorEncoder[backLeft]) < abs(nMotorEncoder[backRight])) && (direction==1))
-			{
-				motor[frontRight] =  (gospeed-delta);
-				motor[backRight]  =  (gospeed-delta);
-				motor[frontLeft]  =  gospeed;
-				motor[backLeft]   =  gospeed;
-				wait1Msec(1);
-			}
-			//if moving backward and left lags, slow down right side
-			else if ((abs(nMotorEncoder[backLeft]) < abs(nMotorEncoder[backRight])) && (direction==-1))
-			{
-				motor[frontRight] = -(gospeed-delta);
-				motor[backRight]  = -(gospeed-delta);
-				motor[frontLeft]  = -gospeed;
-				motor[backLeft]   = -gospeed;
-				wait1Msec(1);
-			}
-			else stopmotors();
+			else stopPincers();
 		}
 	}
-	if(pos == "closed")
+	if(pos == 0)
 	{
-
+		while ((abs(nMotorEncoder[pincer]) != (abs(closeP)-30)) || (abs(nMotorEncoder[pincer]) != (abs(closeP)+30)))
+		{
+			if((abs(nMotorEncoder[pincer])) < (abs(closeP)-30))
+			{
+				motor[pincer] = -speed;
+			}
+			if((abs(nMotorEncoder[pincer])) > (abs(closeP)+30))
+			{
+				motor[pincer] = speed;
+			}
+			else stopPincers();
+		}
 	}
 }
 

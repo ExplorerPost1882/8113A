@@ -70,6 +70,8 @@ task lcdAndArm()
 	string armbattery;
 	string armpos;
 	string armTPos;
+	string pncpos;
+	string pncTPos;
 	int mode = 1;
 	int time = 5;
 
@@ -133,6 +135,12 @@ task lcdAndArm()
 		}
 		else if(mode == 4)
 		{
+			displayLCDString(0,0, "pinc:");
+			displayLCDString(1,0, "pinc target:");
+			sprintf(pncpos, "%4.0f%c", nMotorEncoder[pincer]); //Build the value to be displayed
+			sprintf(pncTPos, "%4.0f%c", pncTP); //Build the value to be displayed
+			displayLCDString(0,4, pncpos);
+			displayLCDString(1,11, pncTPos);
 		}
 		wait1Msec(time);
 	}

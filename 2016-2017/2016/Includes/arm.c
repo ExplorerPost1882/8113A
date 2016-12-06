@@ -19,18 +19,23 @@
 ///////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 //88888888888888888888888888888    ARM MOVEMENT  8888888888888888888888888888888888
+//ints for arm drive and arm lcd out
+int armS;
+int dur;
+int armTP;
 
 //drive the motors as commanded
 void stoparm()
 {
-	motor[topRight]     = 0;
-	motor[bottomRight]  = 0;
-	motor[topLeft]      = 0;
-	motor[bottomLeft]   = 0;
+		motor[topRight]     = 0;
+		motor[bottomRight]  = 0;
+		motor[topLeft]      = 0;
+		motor[bottomLeft]   = 0;
 }
 
 void movearm(int arm, int duration, int holdarm, int holdarmpos)
 {
+	armHol = holdarm;
 	if (holdarm==0)
 	{
 		motor[topRight]     = arm;
@@ -47,37 +52,14 @@ void movearm(int arm, int duration, int holdarm, int holdarmpos)
 	//is set during initialization of robot (pre auton)
 	if (holdarm==1)
 	{
-		while ((nMotorEncoder[topRight] > (holdarmpos+40)) || (nMotorEncoder[topRight] < (holdarmpos-40)))
-		{
-			if (nMotorEncoder[topRight]<holdarmpos) //if below selected point, move up toward it at "arm" speed
-			{
-				motor[topRight]     = arm;
-				motor[bottomRight]  = arm;
-				motor[topLeft]      = arm;
-				motor[bottomLeft]   = arm;
-				wait1Msec(80); //select for arm motion smoothness - too big a number will cause arm
-				//to move too fast and shoot past mid point
-			}
-			else if (nMotorEncoder[topRight]>holdarmpos) //if above selected point, move down toward it at "arm" speed
-			{
-				motor[topRight]     = -arm*2/3; //motion slowed when moving down to prevent overshoot
-				motor[bottomRight]  = -arm*2/3;
-				motor[topLeft]      = -arm*2/3;
-				motor[bottomLeft]   = -arm*2/3;
-				wait1Msec(10);
-			}
-			else // otherwise stop all arm motors
-			{
-				stoparm();
-			}
-		}
-		stoparm();
-		wait1Msec(5);
+		armS = arm;
+		dur = duration;
+		armTP = holdarmpos;
 	}
 }
 
 //88888888888888888888888888888    LCD READOUT  8888888888888888888888888888888888
-task lcd()
+task lcdAndArm()
 {
 	int xbat;
 	string num;
@@ -87,11 +69,41 @@ task lcd()
 	string mainBattery;
 	string armbattery;
 	string armpos;
+	string armTPos;
 	int mode = 1;
-	int time = 500;
+	int time = 5;
 
 	while(1==1)
 	{
+		//888888888888888888888888888 START OF ARM OUTPUT 888888888888888888888888888
+		if(armHol==1)
+		{
+			while ((nMotorEncoder[topRight] > (armTP+40)) || (nMotorEncoder[topRight] < (armTP-40)))
+			{
+				if (nMotorEncoder[topRight]<armTP) //if below selected point, move up toward it at "arm" speed
+				{
+					motor[topRight]     = armS;
+					motor[bottomRight]  = armS;
+					motor[topLeft]      = armS;
+					motor[bottomLeft]   = armS;
+					wait1Msec(80); //select for arm motion smoothness - too big a number will cause arm
+					//to move too fast and shoot past mid point
+				}
+				else if (nMotorEncoder[topRight]>armTP) //if above selected point, move down toward it at "arm" speed
+				{
+					motor[topRight]     = -armS*2/3; //motion slowed when moving down to prevent overshoot
+					motor[bottomRight]  = -armS*2/3;
+					motor[topLeft]      = -armS*2/3;
+					motor[bottomLeft]   = -armS*2/3;
+					wait1Msec(10);
+				}
+				else // otherwise stop all arm motors
+				{
+					stoparm();
+				}
+			}
+			stoparm();
+		}
 		//888888888888888888888888888 START OF LCD CODE 888888888888888888888888888
 		if(nLCDButtons != 0)
 		{
@@ -113,8 +125,11 @@ task lcd()
 		else if(mode == 2)
 		{
 			displayLCDString(0,0, "arm:");
+			displayLCDString(1,0, "arm target:");
 			sprintf(armpos, "%4.0f%c", nMotorEncoder[topRight]); //Build the value to be displayed
+			sprintf(armTPos, "%4.0f%c", armTP); //Build the value to be displayed
 			displayLCDString(0,4, armpos);
+			displayLCDString(1,11, armTPos);
 		}
 		else if(mode == 4)
 		{

@@ -20,9 +20,9 @@ task lcdAndArm()
 		//888888888888888888888888888 START OF ARM OUTPUT 888888888888888888888888888
 		if(armHol==1)
 		{
-			while ((nMotorEncoder[topRight] > (armTP+40)) || (nMotorEncoder[topRight] < (armTP-40)))
+			while ((abs(nMotorEncoder[topRight]) > (abs(armTP+40))) || (abs(nMotorEncoder[topRight]) < (abs(armTP-40))))
 			{
-				if (nMotorEncoder[topRight]<armTP) //if below selected point, move up toward it at "arm" speed
+				if (abs(nMotorEncoder[topRight])<abs(armTP)) //if below selected point, move up toward it at "arm" speed
 				{
 					motor[topRight]     = armS;
 					motor[bottomRight]  = armS;
@@ -31,7 +31,7 @@ task lcdAndArm()
 					wait1Msec(80); //select for arm motion smoothness - too big a number will cause arm
 					//to move too fast and shoot past mid point
 				}
-				else if (nMotorEncoder[topRight]>armTP) //if above selected point, move down toward it at "arm" speed
+				else if (abs(nMotorEncoder[topRight])>abs(armTP)) //if above selected point, move down toward it at "arm" speed
 				{
 					motor[topRight]     = -armS*2/3; //motion slowed when moving down to prevent overshoot
 					motor[bottomRight]  = -armS*2/3;

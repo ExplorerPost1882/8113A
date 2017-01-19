@@ -49,7 +49,7 @@ const int medspd = 95;
 const int lowspd = 40;
 
 #include "Vex_Competition_Includes.c"   //Main competition background code...do not modify!
-#include "1-3-17 includes.c"				 //main user code has all the voids...no need to modify.
+#include "1-10-17 includes.c"				 //main user code has all the voids...no need to modify.
 
 void pre_auton()
 {
@@ -79,64 +79,61 @@ task autonomous()
 	//movearm (speed,duration,holdarm,holdarmpos);
 	//pincers(pncTarget, speed);
 	//wait1Msec (10);
-	//if (SensorValue[RedOrBlue] == 0) //blue
-	//{
-	//	if (SensorValue[LeftOrNot] == 0)//blue left
-	//	{
-	//		movearm(medspd,0,1, 100);
-	//		wait1Msec (10);
-	//		pincers(medsep, wideP);
-	//		wait1Msec (10);
-	//		movearm(medspd,0,1, nockStar);
-	//		wait1Msec (10);
-	//		moverobot(0,0,1000,0,1,medspd);
-	//		wait1Msec (10);
-	//		pincers(closeP, medspd);
-	//	}
-	//	if (SensorValue[LeftOrNot] == 1)//blue Right
-	//	{
-	//		movearm(medspd,0,1, 100);
-	//		wait1Msec (10);
-	//		pincers(wideP, medspd);
-	//		wait1Msec (10);
-	//		movearm(medspd,0,1, nockStar);
-	//		wait1Msec (10);
-	//		moverobot(0,0,1000,0,1,medspd);
-	//		wait1Msec (10);
-	//		pincers(closeP, medspd);
-	//	}
-	//}
-	//if (SensorValue[RedOrBlue] == 1)//red
-	//{
-	//	if (SensorValue[LeftOrNot] == 0) //red right
-	//	{
-	//		movearm(medspd,0,1, 100);
-	//		wait1Msec (10);
-	//		pincers(wideP, medspd);
-	//		wait1Msec (10);
-	//		movearm(medspd,0,1, nockStar);
-	//		wait1Msec (10);
-	//		moverobot(0,0,1000,0,1,medspd);
-	//		wait1Msec (10);
-	//		pincers(closeP, medspd);
-	//	}
-	//	if (SensorValue[LeftOrNot] == 1)//red left
-	//	{
-	//		movearm(medspd,0,1, 100);
-	//		wait1Msec (10);
-	//		pincers(wideP, medspd);
-	//		wait1Msec (10);
-	//		movearm(medspd,0,1, nockStar);
-	//		wait1Msec (10);
-	//		moverobot(0,0,1000,0,1,medspd);
-	//		wait1Msec (10);
-	//		pincers(closeP, medspd);
-	//	}
-	//}
-	//if(SensorValue[Skils] == 1)//skills feald
-	//{
-	//	win();
-	//}
+	if (SensorValue[RedOrBlue] == 0) //blue
+	{
+		if (SensorValue[LeftOrNot] == 0)//blue left
+		{
+		}
+		if (SensorValue[LeftOrNot] == 1)//blue Right
+		{
+		}
+	}
+	if (SensorValue[RedOrBlue] == 1)//red
+	{
+		if (SensorValue[LeftOrNot] == 0) //red right
+		{
+			//rise arm up
+			movearm(medspd,0,1, 100);
+			wait1Msec (10);
+			// open claw
+			pincers(wideP, medspd, 1);
+			wait1Msec (10);
+			//finidh rising arm up
+			movearm(medspd,0,1, nockStar);
+			wait1Msec (10);
+			//knock off stars from right fence
+			moverobot(0,0,1000,0,1,medspd);
+			wait1Msec (10);
+			//back up a little bit
+			moverobot(0,0,-100,0,1,medspd);
+			wait1Msec (10);
+			//go left sideways
+			moverobot(1000,0,0,0,1,medspd);
+			wait1Msec (10);
+			//go forwards a bit to knowck off stars from iddle fence
+			moverobot(0,0,100,0,1,medspd);
+			wait1Msec (10);
+			//back up a bit
+			moverobot(0,0,-10,0,1,medspd);
+			wait1Msec (10);
+			//continue going left
+			moverobot(1000,0,0,0,1,medspd);
+			wait1Msec (10);
+			//rotate left
+			moverobot(0,0,100,0,1,medspd);
+			wait1Msec (10);
+			//grab stars
+			pincers
+
+			}
+		if (SensorValue[LeftOrNot] == 1)//red left
+		{
+		}
+	}
+	if(SensorValue[Skils] == 1)//skills feald
+	{
+		win();
+	}
 }
 
 task usercontrol()

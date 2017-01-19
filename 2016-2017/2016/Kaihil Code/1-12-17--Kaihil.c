@@ -49,7 +49,7 @@ const int medspd = 95;
 const int lowspd = 40;
 
 #include "Vex_Competition_Includes.c"   //Main competition background code...do not modify!
-#include "1-3-17 includes.c"				 //main user code has all the voids...no need to modify.
+#include "1-10-17 includes.c"				 //main user code has all the voids...no need to modify.
 
 void pre_auton()
 {
@@ -74,69 +74,131 @@ void pre_auton()
 task autonomous()
 {
 	startTask(lcdAndArm);
+
+	motor[pincerL]=127;
+		motor[pincerR]=127;
+		wait1Msec(750);
+
+		motor[pincerL]=0;
+		motor[pincerR]=0;
+		wait1Msec(10);
+
+		motor[frontLeft]=70;
+		motor[frontRight]=70;
+		motor[backLeft]=70;
+		motor[backRight]=70;
+		wait1Msec(2200);
+		//goes forward
+		motor[frontLeft]=0;
+		motor[frontRight]=0;
+		motor[backLeft]=0;
+		motor[backRight]=0;
+		wait1Msec(50);
+
+		motor[topLeft]=70;
+		motor[topRight]=70;
+		motor[bottomLeft]=70;
+		motor[bottomRight]=70;
+		wait1Msec(1200);
+		//raises arm
+		motor[topLeft]=0;
+		motor[topRight]=0;
+		motor[bottomLeft]=0;
+		motor[bottomRight]=0;
+		wait1Msec(100);
+
+		motor[frontLeft]=50;
+		motor[frontRight]=50;
+		motor[backLeft]=50;
+		motor[backRight]=50;
+		wait1Msec(600);
+		//goes a bit forward more
+		motor[frontLeft]=0;
+		motor[frontRight]=0;
+		motor[backLeft]=0;
+		motor[backRight]=0;
+		wait1Msec(50);
+
+		motor[frontLeft]=50;
+		motor[frontRight]=50;
+		motor[backLeft]=50;
+		motor[backRight]=50;
+		wait1Msec(1300);
+
+		motor[frontLeft]=0;
+		motor[frontRight]=0;
+		motor[backLeft]=0;
+		motor[backRight]=0;
+		wait1Msec(50);
+
+		motor[pincerL]=100;
+		motor[pincerR]=100;
+		wait1Msec(300);
+
+		motor[pincerL]=0;
+		motor[pincerR]=0;
+		wait1Msec(100);
+
 	//turnrobot(angle,direction,speed);
 	//moverobot(xx1,xx2,yy1,duration,automode,speed);
 	//movearm (speed,duration,holdarm,holdarmpos);
 	//pincers(pncTarget, speed);
 	//wait1Msec (10);
-	//if (SensorValue[RedOrBlue] == 0) //blue
-	//{
-	//	if (SensorValue[LeftOrNot] == 0)//blue left
-	//	{
-	//		movearm(medspd,0,1, 100);
-	//		wait1Msec (10);
-	//		pincers(medsep, wideP);
-	//		wait1Msec (10);
-	//		movearm(medspd,0,1, nockStar);
-	//		wait1Msec (10);
-	//		moverobot(0,0,1000,0,1,medspd);
-	//		wait1Msec (10);
-	//		pincers(closeP, medspd);
-	//	}
-	//	if (SensorValue[LeftOrNot] == 1)//blue Right
-	//	{
-	//		movearm(medspd,0,1, 100);
-	//		wait1Msec (10);
-	//		pincers(wideP, medspd);
-	//		wait1Msec (10);
-	//		movearm(medspd,0,1, nockStar);
-	//		wait1Msec (10);
-	//		moverobot(0,0,1000,0,1,medspd);
-	//		wait1Msec (10);
-	//		pincers(closeP, medspd);
-	//	}
-	//}
-	//if (SensorValue[RedOrBlue] == 1)//red
-	//{
-	//	if (SensorValue[LeftOrNot] == 0) //red right
-	//	{
-	//		movearm(medspd,0,1, 100);
-	//		wait1Msec (10);
-	//		pincers(wideP, medspd);
-	//		wait1Msec (10);
-	//		movearm(medspd,0,1, nockStar);
-	//		wait1Msec (10);
-	//		moverobot(0,0,1000,0,1,medspd);
-	//		wait1Msec (10);
-	//		pincers(closeP, medspd);
-	//	}
-	//	if (SensorValue[LeftOrNot] == 1)//red left
-	//	{
-	//		movearm(medspd,0,1, 100);
-	//		wait1Msec (10);
-	//		pincers(wideP, medspd);
-	//		wait1Msec (10);
-	//		movearm(medspd,0,1, nockStar);
-	//		wait1Msec (10);
-	//		moverobot(0,0,1000,0,1,medspd);
-	//		wait1Msec (10);
-	//		pincers(closeP, medspd);
-	//	}
-	//}
-	//if(SensorValue[Skils] == 1)//skills feald
-	//{
-	//	win();
-	//}
+	/*if (SensorValue[RedOrBlue] == 0) //blue
+	{
+		if (SensorValue[LeftOrNot] == 0)//blue left
+		{
+		}
+		if (SensorValue[LeftOrNot] == 1)//blue Right
+		{
+		}
+	}
+	if (SensorValue[RedOrBlue] == 1)//red
+	{
+		if (SensorValue[LeftOrNot] == 0) //red right
+		{
+			//rise arm up
+			movearm(medspd,0,1, 100);
+			wait1Msec (10);
+			// open claw
+			pincers(wideP, medspd, 1);
+			wait1Msec (10);
+			//finidh rising arm up
+			movearm(medspd,0,1, nockStar);
+			wait1Msec (10);
+			//knock off stars from right fence
+			moverobot(0,0,1000,0,1,medspd);
+			wait1Msec (10);
+			//back up a little bit
+			moverobot(0,0,-100,0,1,medspd);
+			wait1Msec (10);
+			//go left sideways
+			moverobot(1000,0,0,0,1,medspd);
+			wait1Msec (10);
+			//go forwards a bit to knowck off stars from iddle fence
+			moverobot(0,0,100,0,1,medspd);
+			wait1Msec (10);
+			//back up a bit
+			moverobot(0,0,-10,0,1,medspd);
+			wait1Msec (10);
+			//continue going left
+			moverobot(1000,0,0,0,1,medspd);
+			wait1Msec (10);
+			//rotate left
+			moverobot(0,0,100,0,1,medspd);
+			wait1Msec (10);
+			//grab stars
+			pincers
+
+			}
+		if (SensorValue[LeftOrNot] == 1)//red left
+		{
+		}
+	}
+	if(SensorValue[Skils] == 1)//skills feald
+	{
+		win();
+	}*/
 }
 
 task usercontrol()
@@ -211,7 +273,7 @@ task usercontrol()
 			armHol = 0;
 		}
 		//pincer code********************************************
-		if(vexRT[Btn7UXmtr2])
+		/*if(vexRT[Btn7UXmtr2])
 		{
 			pincers(127, oppenP, 1);
 		}
@@ -219,6 +281,13 @@ task usercontrol()
 		{
 			pincers(127, closeP, 1);
 		}
-		pincers(Pinc, 0, 0);
+		pincers(Pinc, 0, 0);*/
+
+		motor[pincerL] = vexRT[Ch3Xmtr2];
+		motor[pincerR] = vexRT[Ch3Xmtr2];
+		motor[topLeft] = vexRT[Ch2Xmtr2];
+		motor[topRight] = vexRT[Ch2Xmtr2];
+		motor[bottomLeft] = vexRT[Ch2Xmtr2];
+		motor[bottomRight] = vexRT[Ch2Xmtr2];
 	}
 }

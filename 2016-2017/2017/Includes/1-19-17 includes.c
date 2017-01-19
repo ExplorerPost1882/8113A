@@ -37,7 +37,6 @@ void pincers(int speed, int pncTP, int autoP)
 		}
 		stopPincers();
 	}
-	stopPincers();
 }
 
 //skiz atun
